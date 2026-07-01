@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VidQA — Video Q&A</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">V</div>
+          <div>
+            <h1>VidQA</h1>
+            <p>Ask questions about YouTube videos with timestamped answers.</p>
+          </div>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <h2>Paste any YouTube link and get quick video answers.</h2>
+            <p>VidQA uses transcript retrieval and context-aware search to show you the exact moment in the video where the answer lives.</p>
+            <div class="url-card">
+              <label for="youtubeUrl">YouTube URL</label>
+              <input id="youtubeUrl" type="text" placeholder="https://www.youtube.com/watch?v=..." />
+              <button type="button">Process Video</button>
+            </div>
+            <div class="note-box">
+              <strong>Tip:</strong> If a video has no captions, VidQA will ask for a different URL.
+            </div>
+          </div>
+
+          <div class="preview-card">
+            <div class="preview-header">
+              <span>Processed video preview</span>
+              <span class="status ready">Ready</span>
+            </div>
+            <div class="preview-embed">
+              <div class="video-placeholder">YouTube player preview</div>
+            </div>
+            <div class="preview-meta">
+              <div>
+                <strong>Video:</strong>
+                <span>Understanding RAG with AI</span>
+              </div>
+              <div>
+                <strong>Duration:</strong>
+                <span>12:34</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="features-panel">
+          <div class="features-intro">
+            <span class="eyebrow">Built for intelligent video workflows</span>
+            <h2>Instant insights from every YouTube video.</h2>
+            <p>VidQA blends transcript retrieval, timestamped references, and AI-powered answers into a polished experience for modern teams.</p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <div class="feature-icon">💡</div>
+              <h3>Contextual search</h3>
+              <p>Retrieve the most relevant transcript segments with overlap-aware chunking for precise answers.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">⏱️</div>
+              <h3>Clickable timestamps</h3>
+              <p>Jump directly to the exact moment in the video with timestamp chips for effortless review.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">🔍</div>
+              <h3>Smart summarization</h3>
+              <p>Only the most important chunks are sent to the model, keeping responses fast and expensive-free.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">🧠</div>
+              <h3>Reliable answers</h3>
+              <p>Answers are grounded in transcript context and designed to flag when the video doesn’t contain the information.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="qa-panel">
+          <div class="qa-layout">
+            <div class="video-pane">
+              <div class="panel-header">
+                <h3>Video Player</h3>
+                <span class="tag">Embedded preview</span>
+              </div>
+              <div class="video-box">Video iframe placeholder</div>
+            </div>
+
+            <div class="chat-pane">
+              <div class="panel-header">
+                <h3>Ask about the video</h3>
+                <span class="tag">RAG Q&A</span>
+              </div>
+              <div class="chat-card">
+                <div class="chat-message bot">
+                  <p>Welcome! Paste a YouTube link above, process the video, then ask a question.</p>
+                </div>
+                <div class="chat-message user">
+                  <p>What is the main benefit of retrieval-augmented generation?</p>
+                </div>
+                <div class="chat-message bot">
+                  <p>RAG lets the model answer using only the video transcript context and points to exact timestamps so you can jump to the source.</p>
+                  <div class="timestamp-chips">
+                    <button type="button">02:15</button>
+                    <button type="button">05:43</button>
+                  </div>
+                </div>
+              </div>
+              <div class="question-box">
+                <input type="text" placeholder="Ask a question about the video" />
+                <button type="button">Send</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <section class="history-panel">
+          <div class="panel-header">
+            <h3>History</h3>
+            <p>Previously processed videos</p>
+          </div>
+          <div class="history-grid">
+            <article class="history-card">
+              <h4>RAG in 10 minutes</h4>
+              <p>Ready for Q&A · 18:22</p>
+            </article>
+            <article class="history-card">
+              <h4>AI video search demo</h4>
+              <p>Ready for Q&A · 9:08</p>
+            </article>
+            <article class="history-card disabled">
+              <h4>Video without captions</h4>
+              <p>Processing failed · no transcript</p>
+            </article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
