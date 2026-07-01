@@ -26,7 +26,7 @@
             <div class="url-card">
               <label for="youtubeUrl">YouTube URL</label>
               <input id="youtubeUrl" type="text" placeholder="https://www.youtube.com/watch?v=..." />
-              <button type="button">Process Video</button>
+              <button id="processBtn" type="button">Process Video</button>
             </div>
             <div class="note-box">
               <strong>Tip:</strong> If a video has no captions, VidQA will ask for a different URL.
@@ -36,7 +36,7 @@
           <div class="preview-card">
             <div class="preview-header">
               <span>Processed video preview</span>
-              <span class="status ready">Ready</span>
+              <span id="statusIndicator" class="status ready">Ready</span>
             </div>
             <div class="preview-embed">
               <div class="video-placeholder">YouTube player preview</div>
@@ -44,7 +44,7 @@
             <div class="preview-meta">
               <div>
                 <strong>Video:</strong>
-                <span>Understanding RAG with AI</span>
+                <span id="videoTitle">Understanding RAG with AI</span>
               </div>
               <div>
                 <strong>Duration:</strong>
@@ -99,7 +99,7 @@
                 <h3>Ask about the video</h3>
                 <span class="tag">RAG Q&A</span>
               </div>
-              <div class="chat-card">
+              <div id="chatMessages" class="chat-card">
                 <div class="chat-message bot">
                   <p>Welcome! Paste a YouTube link above, process the video, then ask a question.</p>
                 </div>
@@ -108,15 +108,11 @@
                 </div>
                 <div class="chat-message bot">
                   <p>RAG lets the model answer using only the video transcript context and points to exact timestamps so you can jump to the source.</p>
-                  <div class="timestamp-chips">
-                    <button type="button">02:15</button>
-                    <button type="button">05:43</button>
-                  </div>
                 </div>
               </div>
               <div class="question-box">
-                <input type="text" placeholder="Ask a question about the video" />
-                <button type="button">Send</button>
+                <input id="questionInput" type="text" placeholder="Ask a question about the video" />
+                <button id="sendBtn" type="button">Send</button>
               </div>
             </div>
           </div>
@@ -144,5 +140,6 @@
         </section>
       </main>
     </div>
+    <script src="script.js"></script>
   </body>
 </html>
