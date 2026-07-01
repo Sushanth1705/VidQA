@@ -1,27 +1,29 @@
 :root {
   color-scheme: light;
-  font-family: Arial, sans-serif;
-  --bg: #f3f4f6;
-  --panel: #fff;
+  font-family: Inter, "Segoe UI", Roboto, Arial, sans-serif;
+  --bg: #f5f7fb;
+  --panel: #ffffff;
   --text: #111827;
   --muted: #6b7280;
   --accent: #2563eb;
+  --accent-soft: #eff6ff;
   --border: #e5e7eb;
+  --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
 }
 
 * { box-sizing: border-box; }
 
 body {
   margin: 0;
-  background: var(--bg);
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2ff 100%);
   color: var(--text);
-  line-height: 1.5;
+  line-height: 1.6;
 }
 
 .app-shell {
-  max-width: 960px;
+  max-width: 1080px;
   margin: 0 auto;
-  padding: 24px;
+  padding: 28px;
 }
 
 .topbar,
@@ -31,22 +33,31 @@ body {
 .history-panel {
   background: var(--panel);
   border: 1px solid var(--border);
-  border-radius: 12px;
-  padding: 16px;
-  margin-bottom: 16px;
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow);
 }
 
-.brand { display: flex; align-items: center; gap: 12px; }
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .logo {
-  width: 40px;
-  height: 40px;
+  width: 44px;
+  height: 44px;
   display: grid;
   place-items: center;
   border-radius: 50%;
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), #4f46e5);
   color: #fff;
   font-weight: 700;
+  letter-spacing: 0.04em;
 }
+
+h1, h2, h3, h4 { margin-top: 0; }
 
 input,
 button {
@@ -55,18 +66,25 @@ button {
 
 input {
   width: 100%;
-  padding: 10px 12px;
+  padding: 11px 13px;
   border: 1px solid var(--border);
-  border-radius: 8px;
+  border-radius: 10px;
+  background: #fcfdff;
 }
 
 button {
-  padding: 10px 12px;
+  padding: 10px 14px;
   border: 0;
-  border-radius: 8px;
-  background: var(--accent);
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent), #4f46e5);
   color: #fff;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.2);
 }
 
 .url-card,
@@ -83,8 +101,8 @@ button {
 .history-card {
   padding: 12px;
   border: 1px solid var(--border);
-  border-radius: 10px;
-  background: #fafafa;
+  border-radius: 12px;
+  background: #fafcff;
 }
 
 .status {
@@ -93,6 +111,7 @@ button {
   border-radius: 999px;
   background: #e5e7eb;
   color: #374151;
+  font-size: 0.9rem;
 }
 
 .status.ready { background: #dcfce7; color: #166534; }
@@ -108,11 +127,15 @@ button {
 .chat-message {
   max-width: 85%;
   padding: 10px 12px;
-  border-radius: 10px;
+  border-radius: 12px;
 }
 
 .chat-message.bot { background: #f3f4f6; }
-.chat-message.user { margin-left: auto; background: #dbeafe; }
+.chat-message.user {
+  margin-left: auto;
+  background: var(--accent-soft);
+  color: #1e3a8a;
+}
 
 .feature-grid,
 .history-grid {
