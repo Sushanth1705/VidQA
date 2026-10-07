@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Server Configuration Manager</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: #e7edf4;
+    color: #1f2937;
+}
+
+.page-wrapper {
+    min-height: 100vh;
+    padding: 32px 16px 48px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    background: #e7edf4;
+}
+
+.container {
+    max-width: 980px;
+    width: 100%;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 22px;
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+h2 {
+    margin-bottom: 20px;
+    font-size: 2rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-align: center;
+    color: #0f172a;
+}
+
+.form {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 760px) {
+    .form {
+        grid-template-columns: 1fr;
+    }
+}
+
+input,
+select {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid #cbd5e1;
+    border-radius: 14px;
+    background: #fbfdff;
+    color: #0f172a;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.14);
+}
+
+.status-message {
+    display: none;
+    margin-bottom: 18px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    font-size: 0.99rem;
+    line-height: 1.4;
+}
+
+.status-message.visible {
+    display: block;
+}
+
+.status-success {
+    background: #ecfdf5;
+    border: 1px solid #d1fae5;
+    color: #166534;
+}
+
+.status-error {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #991b1b;
+}
+
+.status-info {
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    color: #1d4ed8;
+}
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    justify-content: center;
+    margin-bottom: 22px;
+}
+
+.form-panel {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 24px;
+    padding: 24px;
+    margin-bottom: 22px;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.06);
+}
+
+button {
+    min-width: 130px;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 26px;
+    cursor: pointer;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    transition: transform 0.2s ease, opacity 0.2s ease, box-shadow 0.2s ease;
+}
+
+button:hover {
+    transform: translateY(-1px);
+    opacity: 0.95;
+    box-shadow: 0 10px 20px rgba(15, 23, 42, 0.12);
+}
+
+button.register {
+    background: #16a34a;
+    color: #ffffff;
+}
+
+button.validate {
+    background: #f97316;
+    color: #ffffff;
+}
+
+button.update {
+    background: #2563eb;
+    color: #ffffff;
+}
+
+button.delete {
+    background: #dc2626;
+    color: #ffffff;
+}
+
+button.deploy {
+    background: #7c3aed;
+    color: #ffffff;
+}
+
+button.clear {
+    background: #64748b;
+    color: #ffffff;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(260px, 1fr));
+    gap: 18px;
+}
+
+@media (max-width: 910px) {
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+.info-card {
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 20px;
+    padding: 22px;
+    box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
+}
+
+.info-card h3 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 1.05rem;
+    color: #0f172a;
+}
+
+.summary-list {
+    display: grid;
+    gap: 12px;
+}
+
+.summary-list div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 16px;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+}
+
+.summary-list span {
+    color: #475569;
+}
+
+.summary-list strong {
+    color: #0f172a;
+}
+
+.deployment-state {
+    display: grid;
+    gap: 14px;
+}
+
+.state-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px 16px;
+    border-radius: 999px;
+    font-weight: 700;
+    color: #ffffff;
+    width: fit-content;
+}
+
+.state-ready {
+    background: #475569;
+}
+
+.state-validating {
+    background: #f97316;
+}
+
+.state-deploying {
+    background: #7c3aed;
+}
+
+.state-success {
+    background: #16a34a;
+}
+
+.state-failed {
+    background: #dc2626;
+}
+
+.console-panel {
+    min-height: 240px;
+    background: #0f172a;
+    color: #e2e8f0;
+    border-radius: 18px;
+    padding: 16px;
+    font-family: ui-monospace, SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
+    overflow-y: auto;
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.console-line {
+    margin: 0 0 10px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.table-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.table-scroll {
+    overflow-x: auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    padding: 14px 12px;
+    border: 1px solid #e2e8f0;
+    text-align: left;
+    vertical-align: middle;
+}
+
+th {
+    background: #0f172a;
+    color: #ffffff;
+    font-weight: 700;
+}
+
+tr:nth-child(even) {
+    background: #f8fafc;
+}
+
+.actions {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.editBtn,
+.deleteBtn {
+    padding: 8px 12px;
+    border-radius: 999px;
+    font-size: 0.95rem;
+    border: none;
+    cursor: pointer;
+    color: #ffffff;
+}
+
+.editBtn {
+    background: #f97316;
+}
+
+.deleteBtn {
+    background: #dc2626;
+}
+
+@media (max-width: 640px) {
+    .actions {
+        justify-content: flex-start;
+    }
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="page-wrapper">
+    <div class="container">
+
+        <h2>Server Configuration Manager</h2>
+
+        <div class="form-panel">
+            <div class="form">
+
+                <input type="text" id="serverName" placeholder="Server Name">
+
+<input type="text" id="ip" placeholder="IP Address">
+
+<select id="os">
+<option value="">Select Operating System</option>
+<option>Windows Server</option>
+<option>Linux</option>
+<option>Ubuntu</option>
+<option>CentOS</option>
+</select>
+
+<input type="text" id="location" placeholder="Server Location">
+
+<select id="status">
+<option value="">Select Status</option>
+<option>Online</option>
+<option>Offline</option>
+<option>Maintenance</option>
+</select>
+
+</div>
+
+            <div id="statusMessage" class="status-message"></div>
+
+            <div class="buttons">
+                <button type="button" class="register" id="registerButton" onclick="registerServer()">Register</button>
+    <button type="button" class="validate" id="validateButton" onclick="validateServers()">Validate</button>
+    <button type="button" class="update" id="updateButton" onclick="updateServer()">Update</button>
+    <button type="button" class="delete" id="deleteButton" onclick="deleteSelectedServer()">Delete</button>
+    <button type="button" class="deploy" id="deployButton" onclick="deployServer()">Deploy</button>
+    <button type="button" class="clear" id="clearButton" onclick="clearForm()">Clear</button>
+            </div>
+        </div>
+
+        <div class="info-grid">
+    <div class="info-card">
+        <h3>Server Configuration Summary</h3>
+        <div class="summary-list">
+            <div><span>Server Name</span><strong id="summaryName">—</strong></div>
+            <div><span>IP Address</span><strong id="summaryIp">—</strong></div>
+            <div><span>Operating System</span><strong id="summaryOs">—</strong></div>
+            <div><span>Location</span><strong id="summaryLocation">—</strong></div>
+            <div><span>Status</span><strong id="summaryStatus">—</strong></div>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h3>Deployment Status</h3>
+        <div class="deployment-state">
+            <p id="deploymentMessage">Ready to manage your server deployments.</p>
+            <span id="deploymentStateLabel" class="state-pill state-ready">Ready</span>
+        </div>
+    </div>
+
+    <div class="info-card">
+        <h3>Server Response</h3>
+        <div id="responseConsole" class="console-panel"></div>
+    </div>
+
+    <div class="info-card table-card">
+        <h3>Registered Servers</h3>
+        <div class="table-scroll">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Server Name</th>
+                        <th>IP Address</th>
+                        <th>Operating System</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="serverTable"></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+        </div>
+    </div>
+
+<script src="backend.js"></script>
+
+</body>
+</html>

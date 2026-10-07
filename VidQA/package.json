@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "express": "^5.2.1"
+  }
+  ,"scripts":{
+    "start":"node server.js",
+    "start:py":"uvicorn processing_service:app --reload --port 8000",
+    "docker:up": "docker compose up --build",
+    "docker:down": "docker compose down"
+  }
+}

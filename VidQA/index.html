@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VidQA — AI Video Q&A with Timestamps</title>
+    <link rel="stylesheet" href="styles.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  </head>
+  <body>
+    <div class="app-shell">
+      <!-- Top Navigation -->
+      <header class="topbar">
+        <div class="brand">
+          <div class="logo">V</div>
+          <div class="brand-text">
+            <h1>VidQA <span class="badge">RAG AI</span></h1>
+            <p>Intelligent video question answering with interactive timestamps</p>
+          </div>
+        </div>
+        <div class="topbar-actions">
+          <a href="/" class="logout-btn">Logout</a>
+        </div>
+      </header>
+
+      <main class="content">
+        <!-- Hero Section with Ingestion -->
+        <section class="hero-panel">
+          <div class="hero-copy">
+            <div class="pill-tag">✨ Context-Aware Video RAG System</div>
+            <h2>Ask Questions About Any YouTube Video</h2>
+            <p>VidQA indexes video transcripts into semantic chunks and provides answers with exact clickable timestamps that seek the player directly to the source.</p>
+            
+            <div class="url-card">
+              <input id="youtubeUrl" type="text" placeholder="Paste YouTube link (e.g. https://www.youtube.com/watch?v=...)" />
+              <button id="processBtn" type="button">
+                <span>Process Video</span>
+              </button>
+            </div>
+
+            <div class="sample-row">
+              <span class="sample-label">Try sample:</span>
+              <button type="button" class="sample-btn" data-url="https://www.youtube.com/watch?v=jNQXAC9IVRw">Me at the zoo</button>
+              <span class="divider">•</span>
+              <button type="button" class="sample-btn" data-url="https://www.youtube.com/watch?v=dQw4w9WgXcQ">Rick Astley</button>
+            </div>
+
+            <div id="statusAlert" class="status-alert" style="display:none;"></div>
+          </div>
+
+          <div class="preview-card">
+            <div class="preview-header">
+              <span>Video Status</span>
+              <span id="statusIndicator" class="status ready">Ready</span>
+            </div>
+            <div class="preview-embed">
+              <img id="videoThumbnail" alt="Video thumbnail" style="display:none;" />
+              <div id="previewPlaceholder" class="video-placeholder">No video loaded</div>
+            </div>
+            <div class="preview-meta">
+              <div>
+                <strong>Title:</strong>
+                <span id="videoTitle">—</span>
+              </div>
+              <div>
+                <strong>Chunks:</strong>
+                <span id="chunksCount">—</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Two-Column Interactive Q&A Workspace -->
+        <section class="qa-panel">
+          <div class="qa-layout">
+            <!-- Left Pane: Video Player -->
+            <div class="video-pane">
+              <div class="panel-header">
+                <h3>Embedded Video Player</h3>
+                <span class="tag">Interactive Seek</span>
+              </div>
+              <div id="playerContainer" class="video-box">
+                <div id="playerFallback" class="player-empty-state">
+                  <div class="play-icon-box">▶</div>
+                  <p>Process a YouTube video above to start playing and asking questions.</p>
+                </div>
+                <iframe
+                  id="mainIframe"
+                  style="display:none; width:100%; height:100%; border:0; border-radius:12px;"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowfullscreen
+                ></iframe>
+              </div>
+              <div class="player-tip">
+                💡 <strong>Tip:</strong> Click any timestamp chip (e.g. <code>[01:23]</code>) in the answers to seek directly to that exact second.
+              </div>
+            </div>
+
+            <!-- Right Pane: Q&A Chat Feed -->
+            <div class="chat-pane">
+              <div class="panel-header">
+                <h3>Ask About This Video</h3>
+                <span class="tag tag-accent">Grounded RAG</span>
+              </div>
+              
+              <!-- Messages stream -->
+              <div id="chatMessages" class="chat-card">
+                <div class="chat-message bot">
+                  <p>Welcome to VidQA! Paste a YouTube URL above and click <strong>Process Video</strong>, then ask any question about its content.</p>
+                </div>
+              </div>
+
+              <!-- Quick starter chips -->
+              <div class="starter-chips">
+                <button type="button" class="starter-btn" data-query="Summarize this video">💡 Summarize video</button>
+                <button type="button" class="starter-btn" data-query="What are the main topics discussed?">💡 Main topics</button>
+                <button type="button" class="starter-btn" data-query="What is the key takeaway?">💡 Key takeaway</button>
+              </div>
+
+              <!-- Question Input Form -->
+              <div class="question-box">
+                <input id="questionInput" type="text" placeholder="Ask a question about the video..." />
+                <button id="sendBtn" type="button">Ask</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Features Showcase -->
+        <section class="features-panel">
+          <div class="features-intro">
+            <span class="eyebrow">Engineered for Accuracy</span>
+            <h2>Retrieval-Augmented Video Intelligence</h2>
+            <p>Every response is strictly grounded in the extracted transcript, eliminating hallucinations and enabling pinpoint timestamp verification.</p>
+          </div>
+          <div class="feature-grid">
+            <article class="feature-card">
+              <div class="feature-icon">⚡</div>
+              <h3>Automated Captions</h3>
+              <p>Fetches manual and auto-generated transcripts with robust fallback and multi-language support.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">🧩</div>
+              <h3>Semantic Chunking</h3>
+              <p>Segments text into sentence-aware blocks with ~20% overlap while tracking exact start and end times.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">⏱️</div>
+              <h3>Clickable Seeking</h3>
+              <p>Timestamp chips seek the embedded YouTube player directly to the supporting moments.</p>
+            </article>
+            <article class="feature-card">
+              <div class="feature-icon">🛡️</div>
+              <h3>Zero-Cost Offline Fallback</h3>
+              <p>Operates with local ONNX semantic search out-of-the-box or powers full GPT-4o-mini generation.</p>
+            </article>
+          </div>
+        </section>
+
+        <!-- Dynamic History Panel -->
+        <section class="history-panel">
+          <div class="panel-header">
+            <h3>Processed Videos History</h3>
+            <p>Access previously indexed YouTube videos</p>
+          </div>
+          <div id="historyGrid" class="history-grid">
+            <!-- Dynamically populated from /api/videos/history -->
+            <p class="history-empty">No processed videos yet. Process your first video above.</p>
+          </div>
+        </section>
+      </main>
+
+      <footer class="footer">
+        <p>VidQA — AI-Powered Video Question Answering RAG System</p>
+      </footer>
+    </div>
+    <script src="script.js"></script>
+  </body>
+</html>

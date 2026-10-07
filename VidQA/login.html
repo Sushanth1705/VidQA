@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VidQA — Portal Login</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+<div class="login-container">
+    <div class="brand-logo">
+        <div class="logo">V</div>
+        <h1>VidQA</h1>
+    </div>
+    <h2>Sign In to Workspace</h2>
+    <p class="subtitle">Video Question Answering System</p>
+
+    <div id="alertBox" class="alert-box" style="display:none;"></div>
+
+    <form id="loginForm">
+        <div class="input-group">
+            <label for="email">Email Address</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="sushanth@gmail.com"
+                value="sushanth@gmail.com"
+                required
+            >
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="••••"
+                value="1234"
+                required
+            >
+        </div>
+        <button type="submit" id="submitBtn">Sign In</button>
+    </form>
+
+    <div class="demo-box">
+        <span>Demo Credentials:</span>
+        <code>sushanth@gmail.com / 1234</code>
+        <code>rahul@gmail.com / 4321</code>
+    </div>
+</div>
+
+<script>
+const form = document.getElementById("loginForm");
+const alertBox = document.getElementById("alertBox");
+const submitBtn = document.getElementById("submitBtn");
+
+function showAlert(msg, isError = true) {
+    alertBox.textContent = msg;
+    alertBox.className = `alert-box ${isError ? 'error' : 'success'}`;
+    alertBox.style.display = 'block';
+}
+
+form.addEventListener("submit", async function(e){
+    e.preventDefault();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
+    alertBox.style.display = 'none';
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Authenticating...';
+
+    try {
+        const response = await fetch("/login", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ email, password })
+        });
+        const data = await response.json();
+        if (response.ok) {
+            showAlert("Login successful! Redirecting...", false);
+            setTimeout(() => {
+                window.location.href = "/vidqa";
+            }, 600);
+        } else {
+            showAlert(data.message || "Invalid Email or Password");
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Sign In';
+        }
+    } catch(error) {
+        showAlert("Could not connect to server. Ensure port 3000 is running.");
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Sign In';
+    }
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,47 @@
+version: '3.8'
+
+services:
+  # Python FastAPI Processing Service
+  fastapi-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.python
+    container_name: vidqa-fastapi
+    restart: unless-stopped
+    volumes:
+      - ./data:/app/data
+    networks:
+      - vidqa-network
+
+  # Node.js Frontend & Auth Service
+  node-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.node
+    container_name: vidqa-node
+    restart: unless-stopped
+    environment:
+      - FASTAPI_URL=http://fastapi-app:8000
+    depends_on:
+      - fastapi-app
+    networks:
+      - vidqa-network
+
+  # Nginx Reverse Proxy Gateway
+  nginx:
+    image: nginx:alpine
+    container_name: vidqa-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.docker.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      - node-app
+      - fastapi-app
+    networks:
+      - vidqa-network
+
+networks:
+  vidqa-network:
+    driver: bridge
