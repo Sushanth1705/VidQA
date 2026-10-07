@@ -1,0 +1,51 @@
+services:
+  # 1. FastAPI Processing Engine (Python)
+  - type: web
+    name: vidqa-processing
+    runtime: python
+    region: oregon
+    plan: free
+    buildCommand: pip install -r processing/requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    rootDir: processing
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: OPENAI_API_KEY
+        sync: false
+
+  # 2. Express Backend API (Node.js)
+  - type: web
+    name: vidqa-backend
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: npm install
+    startCommand: node server.js
+    rootDir: Backend
+    envVars:
+      - key: PORT
+        value: 10000
+      - key: MONGO_URI
+        sync: false
+      - key: FASTAPI_URL
+        fromService:
+          type: web
+          name: vidqa-processing
+          property: host
+
+  # 3. React Frontend (Static Site)
+  - type: web
+    name: vidqa-frontend
+    runtime: static
+    region: oregon
+    plan: free
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    rootDir: frontend
+    envVars:
+      - key: VITE_API_URL
+        fromService:
+          type: web
+          name: vidqa-backend
+          property: host

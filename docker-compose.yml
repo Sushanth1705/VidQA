@@ -1,7 +1,7 @@
 version: '3.8'
 
 services:
-  # Python FastAPI RAG Processing Service
+  # 1. Python FastAPI RAG Processing Service
   processing:
     build:
       context: ./processing
@@ -11,15 +11,15 @@ services:
     ports:
       - "8000:8000"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
       - CHROMA_PATH=/app/chroma_db
       - PORT=8000
     volumes:
-      - ./processing/chroma_db:/app/chroma_db
+      - vidqa-chroma-data:/app/chroma_db
     networks:
       - vidqa-net
 
-  # Express.js API Backend
+  # 2. Express.js API Backend
   backend:
     build:
       context: ./backend
@@ -38,7 +38,7 @@ services:
     networks:
       - vidqa-net
 
-  # MongoDB Container
+  # 3. MongoDB Database
   mongo:
     image: mongo:7.0
     container_name: vidqa-mongo
@@ -50,7 +50,17 @@ services:
     networks:
       - vidqa-net
 
-  # Nginx Gateway & Static React Server
+  # 4. React Vite Frontend & Reverse Proxy Gateway
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: vidqa-frontend
+    restart: unless-stopped
+    networks:
+      - vidqa-net
+
+  # 5. Nginx Gateway
   nginx:
     image: nginx:alpine
     container_name: vidqa-nginx
@@ -59,10 +69,10 @@ services:
       - "80:80"
     volumes:
       - ./nginx.docker.conf:/etc/nginx/nginx.conf:ro
-      - ./frontend/dist:/usr/share/nginx/html:ro
     depends_on:
       - backend
       - processing
+      - frontend
     networks:
       - vidqa-net
 
@@ -72,3 +82,4 @@ networks:
 
 volumes:
   vidqa-mongo-data:
+  vidqa-chroma-data:
